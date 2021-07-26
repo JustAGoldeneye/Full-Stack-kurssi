@@ -4,10 +4,13 @@ import CountryResults from './components/CountryResults'
 import FilterForm from './components/FilterForm'
 import CountryInfo from './components/CountryInfo'
 
+const api_key = process.env.REACT_APP_API_KEY
+
 const App = () => {
   const [ countries, setCountries ] = useState([])
   const [ nameFilter, setNameFilter ] = useState('')
   const [ countriesShown, setCountriesShown ] = useState('')
+  const [ weather, setWeather ] = useState([])
 
   useEffect(() => {
     axios
@@ -15,6 +18,14 @@ const App = () => {
       .then(response => {
         setCountries(response.data)
         setCountriesShown(response.data.length)
+      })
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get('http://api.weatherstack.com/current?access_key=' + api_key + '&query=Helsinki')
+      .then(response => {
+        handleWeatherUpdate(response.data.current)
       })
   }, [])
 
@@ -36,6 +47,10 @@ const App = () => {
     )
   }
 
+  const handleWeatherUpdate = (w) => {
+    setWeather(w)
+  }
+
   return (
     <div>
       <FilterForm
@@ -45,7 +60,10 @@ const App = () => {
       {countriesShown.length === 1
         ?
         <CountryInfo
-          country={countriesShown[0]}/>
+          country={countriesShown[0]}
+          weather={weather}
+          handleWeatherUpdate={handleWeatherUpdate}
+          api_key={api_key}/>
         :
         <CountryResults
           countries={countries}
