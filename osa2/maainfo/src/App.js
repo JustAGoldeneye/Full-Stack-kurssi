@@ -20,8 +20,12 @@ const App = () => {
 
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value)
-    
     setCountriesShown(countriesToShow(event.target.value))
+  }
+
+  const handleInfoButtonClick = (country) => {
+    setNameFilter(country.name)
+    setCountriesShown(countriesToShow(country.name))
   }
 
   const countriesToShow = (filter) => {
@@ -45,7 +49,8 @@ const App = () => {
         :
         <CountryResults
           countries={countries}
-          nameFilter={nameFilter}/>}
+          nameFilter={nameFilter}
+          handleInfoButtonClick={handleInfoButtonClick}/>}
     </div>
   )
 }
